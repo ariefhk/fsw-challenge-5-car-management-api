@@ -6,12 +6,9 @@ exports.whoAmI = async (req, res) => {
     const payload = await authService.authorize(bearerToken);
     res.status(200).json(payload);
   } catch (err) {
-    res.status(401).json({
-      error: {
-        name: err.name,
-        message: err.message,
-        details: err.details || null,
-      },
+    res.status(err.statusCode || 404).json({
+      status: "FAIL",
+      message: err.message,
     });
   }
 };
@@ -29,9 +26,10 @@ exports.login = async (req, res) => {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
-  } catch (error) {
-    res.status(401).json({
-      message: error.message,
+  } catch (err) {
+    res.status(400).json({
+      status: "FAIL",
+      message: err.message,
     });
   }
 };
@@ -49,9 +47,10 @@ exports.register = async (req, res) => {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
-  } catch (error) {
-    res.status(401).json({
-      message: error.message,
+  } catch (err) {
+    res.status(400).json({
+      status: "FAIL",
+      message: err.message,
     });
   }
 };
@@ -69,9 +68,10 @@ exports.registerAdmin = async (req, res) => {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
-  } catch (error) {
-    res.status(401).json({
-      message: error.message,
+  } catch (err) {
+    res.status(err.statusCode || 404).json({
+      status: "FAIL",
+      message: err.message,
     });
   }
 };

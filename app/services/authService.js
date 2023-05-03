@@ -42,7 +42,6 @@ exports.authorize = async (bearerToken) => {
     const tokenPayload = decodeToken(token);
     return await authRepository.find(tokenPayload.id);
   } catch (error) {
-    console.log(error);
     throw new Error("Unauthorized");
   }
 };

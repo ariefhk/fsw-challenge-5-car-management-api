@@ -18,8 +18,8 @@ exports.cloudinaryUpload = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(400).json({
+      status: "fail",
       message: "Gagal Upload file!",
-      err_msg: error.message,
     });
   }
 };
@@ -30,8 +30,8 @@ exports.cloudinaryDelete = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(400).json({
+      status: "fail",
       message: "Gagal Hapus file!",
-      err_msg: error.message,
     });
   }
 };

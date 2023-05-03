@@ -5,11 +5,7 @@ exports.authorize = async (req, res, next) => {
   try {
     const bearerToken = req.headers.authorization;
     const payload = await authService.authorize(bearerToken);
-
-    if (!bearerToken)
-      // throw new InsufficientAccessError(payload?.role?.name);
-      throw new Error("User ga jelas");
-
+    if (!bearerToken) throw new Error("required authorization");
     req.user = payload;
     next();
   } catch (err) {
@@ -17,7 +13,6 @@ exports.authorize = async (req, res, next) => {
       error: {
         name: err.name,
         message: err.message,
-        details: err.details || null,
       },
     });
   }
@@ -32,14 +27,12 @@ exports.isAdmin = async (req, res, next) => {
     ) {
       return next();
     }
-    // throw new InsufficientAccessError(payload?.role?.name);
-    throw new Error("User ga jelas buat tambah data");
+    throw new Error("You don't have permission to access this page");
   } catch (err) {
     res.status(401).json({
       error: {
         name: err.name,
-        message: err.message,
-        details: err.details || null,
+        message: "You don't have permission to access this page",
       },
     });
   }
@@ -49,16 +42,14 @@ exports.isSuperAdmin = async (req, res, next) => {
   try {
     const user = req.user;
     if (ACCESS_CONTROL.SUPERADMIN !== user.roleId)
-      // throw new InsufficientAccessError(payload?.role?.name);
-      throw new Error("User ga jelas");
+      throw new Error("You don't have permission to access this page");
 
     next();
   } catch (err) {
     res.status(401).json({
       error: {
         name: err.name,
-        message: err.message,
-        details: err.details || null,
+        message: "You don't have permission to access this page",
       },
     });
   }
