@@ -54,7 +54,10 @@ exports.register = async (name, email, password) => {
 
   const passswordLength = password.length >= 8;
   if (!passswordLength)
-    throw new ApplicationError(400, `minimum password must be 8 or more!`);
+    throw new ApplicationError(
+      400,
+      `minimum password must be 8 character or more!`
+    );
 
   const encryptedPassword = await encryptPassword(password);
   const role = await authRepository.findMemberRole();

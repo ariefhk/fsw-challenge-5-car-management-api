@@ -19,12 +19,9 @@ exports.login = async (req, res) => {
     const password = req.body.password;
     const user = await authService.login(email, password);
     res.status(201).json({
-      id: user.id,
-      email: user.email,
+      status: "OK",
+      message: "Success",
       token: user.token,
-      role: user.role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
     });
   } catch (err) {
     res.status(err.statusCode || 404).json({
@@ -41,11 +38,10 @@ exports.register = async (req, res) => {
     const password = req.body.password;
     const user = await authService.register(name, email, password);
     res.status(201).json({
-      id: user.id,
+      status: "OK",
+      message: "Success",
       name: user.name,
       email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
     });
   } catch (err) {
     res.status(err.statusCode || 404).json({
@@ -62,11 +58,10 @@ exports.registerAdmin = async (req, res) => {
     const password = req.body.password;
     const user = await authService.registerAdmin(name, email, password);
     res.status(201).json({
-      id: user.id,
+      status: "OK",
+      message: "Success",
       name: user.name,
       email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
     });
   } catch (err) {
     res.status(err.statusCode || 404).json({
