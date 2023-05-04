@@ -1,36 +1,28 @@
 const router = require("express").Router();
 const carController = require("../controllers/api/v1/carController");
 const { authorize, isAdmin } = require("../../app/middlewares/authMiddleware");
-const {
-  carMiddleware,
-  cloudinaryMiddleware,
-  imgUploaderMiddleware,
-} = require("../middlewares");
+const { checkCar } = require("../middlewares/carMiddleware");
+const { cloudinaryUpload } = require("../middlewares/cloudinaryMiddleware");
+const { imgUploader } = require("../middlewares/imgUploaderMiddleware");
 
 router.get("/", carController.getAllCar);
-router.get("/:id", carMiddleware.checkCar, carController.getCar);
+router.get("/:id", checkCar, carController.getCar);
 router.post(
   "/",
   authorize,
   isAdmin,
-  imgUploaderMiddleware,
-  cloudinaryMiddleware.cloudinaryUpload,
+  imgUploader,
+  cloudinaryUpload,
   carController.createCar
 );
-router.delete(
-  "/:id",
-  authorize,
-  isAdmin,
-  carMiddleware.checkCar,
-  carController.deleteCar
-);
+router.delete("/:id", authorize, isAdmin, checkCar, carController.deleteCar);
 router.put(
   "/:id",
   authorize,
   isAdmin,
-  carMiddleware.checkCar,
-  imgUploaderMiddleware,
-  cloudinaryMiddleware.cloudinaryUpload,
+  checkCar,
+  imgUploader,
+  cloudinaryUpload,
   carController.updateCar
 );
 

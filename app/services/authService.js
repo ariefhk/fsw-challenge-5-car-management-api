@@ -48,7 +48,7 @@ exports.register = async (name, email, password) => {
   if (!email) throw new ApplicationError(400, `email can't be empty!`);
   if (!password) throw new ApplicationError(400, `password can't be empty!`);
 
-  const existingUser = authRepository.findByEmail(email.toLowerCase());
+  const existingUser = await authRepository.findByEmail(email.toLowerCase());
   if (!!existingUser)
     throw new Error(`user with email : ${email} already taken!`);
 

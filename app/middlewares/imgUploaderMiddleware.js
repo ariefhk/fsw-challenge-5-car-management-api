@@ -19,7 +19,7 @@ const upload = multer({
   },
 }).single("image");
 
-const imgUploader = (req, res, next) => {
+exports.imgUploader = (req, res, next) => {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       // A Multer error occurred when uploading.
@@ -39,5 +39,3 @@ const imgUploader = (req, res, next) => {
     next();
   });
 };
-
-module.exports = imgUploader;
