@@ -1,10 +1,33 @@
 const { authService } = require("../../../services");
+const { ACCESS_CONTROL } = require("../../../../config/application");
 
 exports.whoAmI = async (req, res) => {
   try {
-    const bearerToken = req.headers.authorization;
-    const payload = await authService.authorize(bearerToken);
-    res.status(200).json(payload);
+    const user = req.user;
+    let me = "";
+    switch (user.roleId) {
+      case ACCESS_CONTROL.SUPERADMIN:
+        me = "Super Admin";
+        break;
+      case ACCESS_CONTROL.ADMIN:
+        me = "Admin";
+        break;
+      case ACCESS_CONTROL.MEMBER:
+        me = "Member";
+        break;
+      default:
+        me = "Unknown";
+        break;
+    }
+    res.status(200).json({
+      status: "OK",
+      message: "Success",
+      data: {
+        name: user.name,
+        email: user.email,
+        role: me,
+      },
+    });
   } catch (err) {
     res.status(err.statusCode || 404).json({
       status: "FAIL",

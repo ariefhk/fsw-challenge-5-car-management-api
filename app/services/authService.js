@@ -38,9 +38,13 @@ const decodeToken = (token) => {
 };
 
 exports.authorize = async (bearerToken) => {
-  const token = bearerToken.split("Bearer ")[1];
-  const tokenPayload = decodeToken(token);
-  return await authRepository.find(tokenPayload.id);
+  try {
+    const token = bearerToken.split("Bearer ")[1];
+    const tokenPayload = decodeToken(token);
+    return await authRepository.find(tokenPayload.id);
+  } catch (error) {
+    throw new ApplicationError(498, "invalid token");
+  }
 };
 
 exports.register = async (name, email, password) => {
@@ -107,6 +111,20 @@ exports.login = async (email, password) => {
 };
 
 exports.registerAdmin = async (name, email, password) => {
+  if (!name) throw new ApplicationError(400, `name can't be empty!`);
+  if (!email) throw new ApplicationError(400, `email can't be empty!`);
+  if (!password) throw new ApplicationError(400, `password can't be empty!`);
+
+  const existingUser = await authRepository.findByEmail(email.toLowerCase());
+  if (!!existingUser)
+    throw new Error(`user with email : ${email} already taken!`);
+
+  const passswordLength = password.length >= 8;
+  if (!passswordLength)
+    throw new ApplicationError(
+      400,
+      `minimum password must be 8 character or more!`
+    );
   const encryptedPassword = await encryptPassword(password);
   const role = await authRepository.findAdminRole();
 
