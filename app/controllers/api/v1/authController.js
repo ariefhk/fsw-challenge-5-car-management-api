@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
       updatedAt: user.updatedAt,
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.statusCode || 404).json({
       status: "FAIL",
       message: err.message,
     });
@@ -48,7 +48,7 @@ exports.register = async (req, res) => {
       updatedAt: user.updatedAt,
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.statusCode || 404).json({
       status: "FAIL",
       message: err.message,
     });

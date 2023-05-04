@@ -7,19 +7,19 @@ exports.checkCar = async (req, res, next) => {
 
     if (!carPayload) {
       res.status(404).json({
-        error: "Car not found!",
+        status: "FAIL",
+        message: `car not found!`,
       });
-
       return;
     }
 
     req.car = carPayload;
 
     next();
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
-      message: "Error!",
-      err_msg: error.message,
+      status: "FAIL",
+      message: "server error!",
     });
   }
 };

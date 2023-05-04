@@ -19,7 +19,7 @@ exports.createCar = async (req, res) => {
       message: "Success",
       data: carPayload,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(404).json({
       status: "FAIL",
       message: err.message,
@@ -35,7 +35,7 @@ exports.getAllCar = async (req, res) => {
       message: "Success",
       data: carPayload,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(404).json({
       status: "FAIL",
       message: err.message,
@@ -51,7 +51,7 @@ exports.getCar = async (req, res) => {
       message: "Success",
       data: car,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(404).json({
       status: "FAIL",
       message: err.message,
@@ -67,7 +67,7 @@ exports.deleteCar = async (req, res) => {
       status: "OK",
       message: "Success",
     });
-  } catch (error) {
+  } catch (err) {
     res.status(404).json({
       status: "FAIL",
       message: err.message,
@@ -96,7 +96,7 @@ exports.updateCar = async (req, res) => {
       message: "Success",
       data: uploadPayload,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(404).json({
       status: "FAIL",
       message: err.message,

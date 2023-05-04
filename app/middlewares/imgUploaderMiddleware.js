@@ -1,13 +1,14 @@
 const multer = require("multer");
 const path = require("path");
 const storage = multer.memoryStorage();
+const ApplicationError = require("../errors/ApplicationError");
 
 const imgFilter = (req, file, callback) => {
   let extFile = path.extname(file.originalname);
   if (extFile === ".png" || extFile === ".jpg" || extFile === ".jpeg")
     return callback(null, true);
   callback(null, false);
-  callback(new Error("Filetype must be PNG/JPG/JPEG"));
+  callback(new ApplicationError(400, "Filetype must be PNG/JPG/JPEG"));
 };
 
 const upload = multer({
@@ -23,15 +24,15 @@ const imgUploader = (req, res, next) => {
     if (err instanceof multer.MulterError) {
       // A Multer error occurred when uploading.
       res.status(400).json({
+        status: "FAIL",
         message: err.message,
-        err_msg: err.code,
       });
       return;
     } else if (err) {
       // An unknown error occurred when uploading.
       res.status(400).json({
+        status: "FAIL",
         message: err.message,
-        err_msg: err.code,
       });
       return;
     }
