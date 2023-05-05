@@ -1,4 +1,4 @@
-const { authService } = require("../services");
+const { userService } = require("../services");
 const ApplicationError = require("../errors/ApplicationError");
 const { ACCESS_CONTROL } = require("../../config/application");
 
@@ -7,7 +7,7 @@ exports.authorize = async (req, res, next) => {
     const bearerToken = req.headers.authorization;
     if (!bearerToken)
       throw new ApplicationError(400, "required authorization!");
-    const payload = await authService.authorize(bearerToken);
+    const payload = await userService.authorize(bearerToken);
     req.user = payload;
     next();
   } catch (err) {

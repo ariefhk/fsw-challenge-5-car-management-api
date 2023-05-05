@@ -1,5 +1,4 @@
-const { authService } = require("../../../services");
-// const { ACCESS_CONTROL } = require("../../../../config/application");
+const { userService } = require("../../../services");
 
 exports.whoAmI = async (req, res) => {
   try {
@@ -25,7 +24,7 @@ exports.login = async (req, res) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
-    const user = await authService.login(email, password);
+    const user = await userService.login(email, password);
     res.status(201).json({
       status: "OK",
       message: "Success",
@@ -44,7 +43,7 @@ exports.register = async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    const user = await authService.register(name, email, password);
+    const user = await userService.register(name, email, password);
     res.status(201).json({
       status: "OK",
       message: "Success",
@@ -66,7 +65,7 @@ exports.registerAdmin = async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    const user = await authService.registerAdmin(name, email, password);
+    const user = await userService.registerAdmin(name, email, password);
     res.status(201).json({
       status: "OK",
       message: "Success",

@@ -1,9 +1,7 @@
-const authRepository = require("./authRepository");
+const userRepository = require("./userRepository");
 const carRepository = require("./carRepository");
-// const historyRepository = require("./historyRepository");
 
 module.exports = {
-  authRepository,
+  userRepository,
   carRepository,
-  // historyRepository,
 };

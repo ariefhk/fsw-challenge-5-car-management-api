@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const carController = require("../controllers/api/v1/carController");
-const { authorize, isAdmin } = require("../../app/middlewares/authMiddleware");
+const { authorize, isAdmin } = require("../middlewares/userMiddleware");
 const { checkCar } = require("../middlewares/carMiddleware");
 const { cloudinaryUpload } = require("../middlewares/cloudinaryMiddleware");
 const { imgUploader } = require("../middlewares/imgUploaderMiddleware");

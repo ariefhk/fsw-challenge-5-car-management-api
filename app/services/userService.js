@@ -1,4 +1,4 @@
-const { authRepository } = require("../repositories");
+const { userRepository } = require("../repositories");
 const {
   JWT_SIGNATURE_KEY,
   ACCESS_CONTROL,
@@ -44,7 +44,7 @@ exports.authorize = async (bearerToken) => {
   try {
     const token = bearerToken.split("Bearer ")[1];
     const tokenPayload = decodeToken(token);
-    return await authRepository.find(tokenPayload.id);
+    return await userRepository.find(tokenPayload.id);
   } catch (error) {
     throw new ApplicationError(498, "invalid token");
   }
@@ -55,7 +55,7 @@ exports.register = async (name, email, password) => {
   if (!email) throw new ApplicationError(400, `email can't be empty!`);
   if (!password) throw new ApplicationError(400, `password can't be empty!`);
 
-  const existingUser = await authRepository.findByEmail(email.toLowerCase());
+  const existingUser = await userRepository.findByEmail(email.toLowerCase());
   if (!!existingUser)
     throw new ApplicationError(
       409,
@@ -70,7 +70,7 @@ exports.register = async (name, email, password) => {
     );
 
   const encryptedPassword = await encryptPassword(password);
-  const user = await authRepository.create({
+  const user = await userRepository.create({
     name,
     email,
     encryptedPassword,
@@ -86,7 +86,7 @@ exports.login = async (email, password) => {
   if (!email) throw new ApplicationError(400, `email can't be empty!`);
   if (!password) throw new ApplicationError(400, `password can't be empty!`);
 
-  const user = await authRepository.findByEmail(email.toLowerCase());
+  const user = await userRepository.findByEmail(email.toLowerCase());
   if (!user) throw new ApplicationError(404, `user not found!`);
 
   const isPasswordCorrect = await checkPassword(
@@ -115,7 +115,7 @@ exports.registerAdmin = async (name, email, password) => {
   if (!email) throw new ApplicationError(400, `email can't be empty!`);
   if (!password) throw new ApplicationError(400, `password can't be empty!`);
 
-  const existingUser = await authRepository.findByEmail(email.toLowerCase());
+  const existingUser = await userRepository.findByEmail(email.toLowerCase());
   if (!!existingUser)
     throw new Error(`user with email : ${email} already taken!`);
 
@@ -127,7 +127,7 @@ exports.registerAdmin = async (name, email, password) => {
     );
   const encryptedPassword = await encryptPassword(password);
 
-  const user = await authRepository.create({
+  const user = await userRepository.create({
     name,
     email,
     encryptedPassword,
