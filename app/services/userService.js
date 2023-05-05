@@ -117,7 +117,10 @@ exports.registerAdmin = async (name, email, password) => {
 
   const existingUser = await userRepository.findByEmail(email.toLowerCase());
   if (!!existingUser)
-    throw new Error(`user with email : ${email} already taken!`);
+    throw new ApplicationError(
+      409,
+      `user with email : ${email} already taken!`
+    );
 
   const passswordLength = password.length >= 8;
   if (!passswordLength)

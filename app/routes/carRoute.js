@@ -7,6 +7,7 @@ const { imgUploader } = require("../middlewares/imgUploaderMiddleware");
 
 router.get("/", carController.getAllCar);
 router.get("/:id", checkCar, carController.getCar);
+router.get("/detail/:id", checkCar, carController.getDetailCar);
 router.post(
   "/",
   authorize,
