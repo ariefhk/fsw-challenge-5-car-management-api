@@ -10,8 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.History, {
-        foreignKey: "historyId",
+      this.belongsTo(models.User, {
+        foreignKey: "createdBy",
+        as: "created",
+      });
+      this.belongsTo(models.User, {
+        foreignKey: "updatedBy",
+        as: "updated",
+      });
+      this.belongsTo(models.User, {
+        foreignKey: "deletedBy",
+        as: "deleted",
       });
     }
   }
@@ -28,11 +37,37 @@ module.exports = (sequelize, DataTypes) => {
       size: DataTypes.STRING,
       image: DataTypes.STRING,
       available: DataTypes.BOOLEAN,
-      historyId: DataTypes.UUID,
+      createdBy: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: "User",
+          key: "id",
+        },
+      },
+      updatedBy: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: "User",
+          key: "id",
+        },
+      },
+      deletedBy: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: "User",
+          key: "id",
+        },
+      },
+      deletedAt: DataTypes.DATE,
     },
     {
+      timestamps: true,
       sequelize,
       modelName: "Car",
+      paranoid: true,
     }
   );
   Car.beforeCreate((car) => (car.id = uuidv4()));

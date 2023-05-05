@@ -22,8 +22,8 @@ exports.isAdmin = async (req, res, next) => {
   try {
     const user = req.user;
     if (
-      ACCESS_CONTROL.SUPERADMIN === user.roleId ||
-      ACCESS_CONTROL.ADMIN === user.roleId
+      ACCESS_CONTROL.SUPERADMIN === user.role ||
+      ACCESS_CONTROL.ADMIN === user.role
     ) {
       return next();
     }
@@ -39,7 +39,7 @@ exports.isAdmin = async (req, res, next) => {
 exports.isSuperAdmin = async (req, res, next) => {
   try {
     const user = req.user;
-    if (ACCESS_CONTROL.SUPERADMIN !== user.roleId)
+    if (ACCESS_CONTROL.SUPERADMIN !== user.role)
       throw new ApplicationError(400, "You don't have permission to access!");
 
     next();

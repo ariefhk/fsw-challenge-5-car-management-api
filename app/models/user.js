@@ -10,8 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Role, {
-        foreignKey: "roleId",
+      this.hasMany(models.Car, {
+        foreignKey: "createdBy",
+        as: "created",
+      });
+      this.hasMany(models.Car, {
+        foreignKey: "updatedBy",
+        as: "updated",
+      });
+      this.hasMany(models.Car, {
+        foreignKey: "deletedBy",
+        as: "deleted",
       });
     }
   }
@@ -26,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       email: DataTypes.STRING,
       encryptedPassword: DataTypes.STRING,
-      roleId: DataTypes.INTEGER,
+      role: DataTypes.STRING,
     },
     {
       sequelize,

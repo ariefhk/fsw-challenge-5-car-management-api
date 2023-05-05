@@ -1,5 +1,8 @@
 const { authRepository } = require("../repositories");
-const { JWT_SIGNATURE_KEY } = require("../../config/application");
+const {
+  JWT_SIGNATURE_KEY,
+  ACCESS_CONTROL,
+} = require("../../config/application");
 const ApplicationError = require("../errors/ApplicationError");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -54,28 +57,28 @@ exports.register = async (name, email, password) => {
 
   const existingUser = await authRepository.findByEmail(email.toLowerCase());
   if (!!existingUser)
-    throw new Error(`user with email : ${email} already taken!`);
+    throw new ApplicationError(
+      409,
+      `user with email : ${email} already taken!`
+    );
 
   const passswordLength = password.length >= 8;
   if (!passswordLength)
     throw new ApplicationError(
       400,
-      `minimum password must be 8 character or more!`
+      `minimum password length must be 8 character or more!`
     );
 
   const encryptedPassword = await encryptPassword(password);
-  const role = await authRepository.findMemberRole();
   const user = await authRepository.create({
     name,
     email,
     encryptedPassword,
-    roleId: role.id,
+    role: ACCESS_CONTROL.MEMBER,
   });
   return {
-    id: user.id,
+    name: user.name,
     email: user.email,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
   };
 };
 
@@ -95,18 +98,15 @@ exports.login = async (email, password) => {
   const token = createToken({
     id: user.id,
     email: user.email,
-    role: user.Role.name,
+    role: user.role,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   });
 
   return {
-    id: user.id,
+    name: user.name,
     email: user.email,
     token,
-    role: user.Role.name,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
   };
 };
 
@@ -126,18 +126,15 @@ exports.registerAdmin = async (name, email, password) => {
       `minimum password must be 8 character or more!`
     );
   const encryptedPassword = await encryptPassword(password);
-  const role = await authRepository.findAdminRole();
 
   const user = await authRepository.create({
     name,
     email,
     encryptedPassword,
-    roleId: role.id,
+    role: ACCESS_CONTROL.ADMIN,
   });
   return {
-    id: user.id,
+    name: user.name,
     email: user.email,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
   };
 };

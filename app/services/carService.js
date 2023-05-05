@@ -1,15 +1,13 @@
-const { carRepository, historyRepository } = require("../repositories");
+const { carRepository } = require("../repositories");
 
-exports.createCar = async (name, price, size, image, available, userId) => {
-  const createHistory = await historyRepository.createdBy(userId);
-  const historyId = createHistory.id;
+exports.createCar = async (name, price, size, image, available, createdBy) => {
   const car = {
     name,
-    price: Number(price),
+    price,
     size,
     image,
-    available: Boolean(available),
-    historyId,
+    available,
+    createdBy,
   };
   return await carRepository.createCar(car);
 };
@@ -22,12 +20,11 @@ exports.getAllCar = async () => {
   return await carRepository.getCar();
 };
 
-exports.deleteCar = async (id) => {
-  return await carRepository.deleteCar(id);
+exports.deleteCar = async (carId, deletedBy) => {
+  await carRepository.updateCar(carId, { deletedBy });
+  return await carRepository.deleteCar(carId);
 };
 
-exports.updateCar = async (carId, updateArgs, userId) => {
-  const historyId = updateArgs.historyId;
-  await historyRepository.updatedBy(userId, historyId);
+exports.updateCar = async (carId, updateArgs) => {
   return await carRepository.updateCar(carId, updateArgs);
 };

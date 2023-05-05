@@ -23,8 +23,35 @@ module.exports = {
       available: {
         type: Sequelize.BOOLEAN,
       },
-      historyId: {
+      createdBy: {
         type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: "Users",
+          },
+          key: "id",
+        },
+      },
+      updatedBy: {
+        type: Sequelize.UUID,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: "Users",
+          },
+          key: "id",
+        },
+      },
+      deletedBy: {
+        type: Sequelize.UUID,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: "Users",
+          },
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +59,10 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE,
+      },
+      deletedAt: {
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

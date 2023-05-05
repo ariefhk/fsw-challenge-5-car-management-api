@@ -1,4 +1,4 @@
-const { Car, History } = require("../models");
+const { Car, User } = require("../models");
 
 exports.createCar = (createArgs) => {
   return Car.create(createArgs);
@@ -13,19 +13,29 @@ exports.deleteCar = (carId) => {
 };
 
 exports.getCar = () => {
-  return Car.findAll({
-    include: {
-      model: History,
-    },
-  });
+  return Car.findAll();
 };
 
 exports.getCarById = (carId) => {
   return Car.findOne({ where: { id: carId } });
 };
 
-exports.getCarUser = () => {
-  return Car.findAll({
-    attributes: { exclude: ["historyId"] },
+exports.getDetailCar = (carId) => {
+  return Car.findByPk(carId, {
+    include: [
+      {
+        model: User,
+        as: "created",
+      },
+      {
+        model: User,
+        as: "updated",
+      },
+      {
+        model: User,
+        as: "deleted",
+      },
+    ],
+    attributes: { exclude: ["createdBy", "updatedBy", "deletedBy"] },
   });
 };

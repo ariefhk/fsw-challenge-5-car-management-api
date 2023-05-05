@@ -4,14 +4,14 @@ exports.createCar = async (req, res) => {
   try {
     const { name, price, size, available } = req.body;
     const image = req.image; //from cloudinary middleware
-    const userId = req.user.id; //from authorize
+    const createdBy = req.user.id; //from authorize
     const carPayload = await carService.createCar(
       name,
       price,
       size,
       image,
       available,
-      userId
+      createdBy
     );
 
     res.status(200).json({
@@ -62,7 +62,8 @@ exports.getCar = async (req, res) => {
 exports.deleteCar = async (req, res) => {
   try {
     const car = req.car;
-    await carService.deleteCar(car.id);
+    const deletedBy = req.user.id;
+    await carService.deleteCar(car.id, deletedBy);
     res.status(200).json({
       status: "OK",
       message: "Success",
@@ -78,19 +79,19 @@ exports.deleteCar = async (req, res) => {
 exports.updateCar = async (req, res) => {
   try {
     const car = req.car;
-    const userId = req.user.id;
+    const updatedBy = req.user.id;
     const carPayload = req.body;
     const image = req.image || car.image;
     //Template obj data
     const uploadPayload = {
       name: carPayload.name || car.name,
-      price: Number(carPayload.price) || car.price,
+      price: carPayload.price || car.price,
       size: carPayload.size || car.size,
       image,
-      available: Boolean(carPayload.available) || car.available,
-      historyId: car.historyId,
+      available: carPayload.available || car.available,
+      updatedBy,
     };
-    await carService.updateCar(car.id, uploadPayload, userId);
+    await carService.updateCar(car.id, uploadPayload);
     res.status(200).json({
       status: "OK",
       message: "Success",

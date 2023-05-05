@@ -1,31 +1,16 @@
 const { authService } = require("../../../services");
-const { ACCESS_CONTROL } = require("../../../../config/application");
+// const { ACCESS_CONTROL } = require("../../../../config/application");
 
 exports.whoAmI = async (req, res) => {
   try {
     const user = req.user;
-    let me = "";
-    switch (user.roleId) {
-      case ACCESS_CONTROL.SUPERADMIN:
-        me = "Super Admin";
-        break;
-      case ACCESS_CONTROL.ADMIN:
-        me = "Admin";
-        break;
-      case ACCESS_CONTROL.MEMBER:
-        me = "Member";
-        break;
-      default:
-        me = "Unknown";
-        break;
-    }
     res.status(200).json({
       status: "OK",
       message: "Success",
       data: {
         name: user.name,
         email: user.email,
-        role: me,
+        role: user.role,
       },
     });
   } catch (err) {
@@ -63,8 +48,10 @@ exports.register = async (req, res) => {
     res.status(201).json({
       status: "OK",
       message: "Success",
-      name: user.name,
-      email: user.email,
+      data: {
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (err) {
     res.status(err.statusCode || 404).json({
@@ -83,8 +70,10 @@ exports.registerAdmin = async (req, res) => {
     res.status(201).json({
       status: "OK",
       message: "Success",
-      name: user.name,
-      email: user.email,
+      data: {
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (err) {
     res.status(err.statusCode || 404).json({
