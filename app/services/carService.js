@@ -11,7 +11,19 @@ exports.createCar = async (name, price, size, image, available, createdBy) => {
       available,
       createdBy,
     };
-    return await carRepository.createCar(carPayload);
+
+    const payload = await carRepository.createCar(carPayload);
+
+    return {
+      id: payload?.id,
+      name: payload?.name,
+      price: payload?.price,
+      size: payload?.size,
+      image: payload?.image,
+      available: payload?.available,
+      updatedAt: payload?.updatedAt,
+      createdAt: payload?.createdAt,
+    };
   } catch (error) {
     throw new ApplicationError(500, "failed insert car!");
   }

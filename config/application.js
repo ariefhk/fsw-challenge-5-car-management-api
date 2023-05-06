@@ -9,5 +9,5 @@ module.exports = {
     ADMIN: "Admin",
     MEMBER: "Member",
   },
-  CLOUDINARY_FOLDER: "car-management-api",
+  CLOUDINARY_FOLDER: "hehe",
 };

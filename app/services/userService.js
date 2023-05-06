@@ -57,10 +57,7 @@ exports.register = async (name, email, password) => {
 
   const existingUser = await userRepository.findByEmail(email.toLowerCase());
   if (!!existingUser)
-    throw new ApplicationError(
-      409,
-      `user with email : ${email} already taken!`
-    );
+    throw new ApplicationError(409, `user with email ${email} already taken!`);
 
   const passswordLength = password.length >= 8;
   if (!passswordLength)
@@ -117,7 +114,18 @@ exports.getAllUser = async () => {
     const userPayload =
       (await payload.length) < 1
         ? []
-        : payload.filter((user) => user.role !== ACCESS_CONTROL.SUPERADMIN);
+        : payload
+            .filter((user) => user.role !== ACCESS_CONTROL.SUPERADMIN)
+            .map((user) => {
+              return {
+                id: user?.id,
+                name: user?.name,
+                email: user?.email,
+                role: user?.role,
+                createdAt: user?.createdAt,
+                updatedAt: user?.updatedAt,
+              };
+            });
 
     return userPayload;
   } catch (error) {
@@ -129,7 +137,8 @@ exports.deleteUser = async (id) => {
   try {
     return await userRepository.delete(id);
   } catch (error) {
-    throw new ApplicationError(500, "failed delete user!");
+    // throw new ApplicationError(500, "failed delete user!");
+    throw new ApplicationError(500, error.message);
   }
 };
 
@@ -140,10 +149,7 @@ exports.registerAdmin = async (name, email, password) => {
 
   const existingUser = await userRepository.findByEmail(email.toLowerCase());
   if (!!existingUser)
-    throw new ApplicationError(
-      409,
-      `user with email : ${email} already taken!`
-    );
+    throw new ApplicationError(409, `user with email ${email} already taken!`);
 
   const passswordLength = password.length >= 8;
   if (!passswordLength)

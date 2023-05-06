@@ -2,7 +2,7 @@ const { userService } = require("../../../services");
 
 exports.whoAmI = async (req, res) => {
   try {
-    const user = req.user;
+    const user = req.user; //from authorization userMiddleware
     res.status(200).json({
       status: "OK",
       message: "Success",
@@ -35,27 +35,13 @@ exports.getAllUser = async (req, res) => {
     });
   }
 };
-exports.deleteUser = async (req, res) => {
-  try {
-    await userService.deleteUser();
-    res.status(200).json({
-      status: "OK",
-      message: "Success delete user!",
-    });
-  } catch (err) {
-    res.status(err.statusCode || 404).json({
-      status: "FAIL",
-      message: err.message,
-    });
-  }
-};
 
 exports.login = async (req, res) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
     const user = await userService.login(email, password);
-    res.status(201).json({
+    res.status(200).json({
       status: "OK",
       message: "Success",
       token: user.token,

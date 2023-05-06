@@ -25,7 +25,7 @@ exports.createCar = async (req, res) => {
       createdBy
     );
 
-    res.status(200).json({
+    res.status(201).json({
       status: "OK",
       message: "Success",
       data: carPayload,
@@ -91,7 +91,7 @@ exports.getCar = async (req, res) => {
 
 exports.getDetailCar = async (req, res) => {
   try {
-    const carId = req.car.id; //from check car middleware
+    const carId = req.params.id; //from params
     const carPayload = await carService.getDetailCar(carId);
     res.status(200).json({
       status: "OK",
@@ -128,12 +128,18 @@ exports.updateCar = async (req, res) => {
     const car = req.car; //from check car middleware
     const updatedBy = req.user.id; //from authorize
     const carPayload = req.body;
-    const image = req.image || car.image;
+    const image = req.image || car.image; // from cloudinary middleware
+    const size = carPayload.size || car.size;
+    if (!["small", "medium", "large"].includes(size.toLowerCase()))
+      throw new ApplicationError(
+        400,
+        "size format must be small, medium, or large"
+      );
     //Template object payload
     const uploadPayload = {
       name: carPayload.name || car.name,
-      price: carPayload.price || car.price,
-      size: carPayload.size || car.size,
+      price: Number(carPayload.price) || car.price,
+      size,
       image,
       available: carPayload.available || car.available,
       updatedBy,
@@ -142,7 +148,13 @@ exports.updateCar = async (req, res) => {
     res.status(200).json({
       status: "OK",
       message: "Success",
-      data: uploadPayload,
+      data: {
+        name: uploadPayload.name,
+        price: uploadPayload.price,
+        size: uploadPayload.size,
+        image: uploadPayload.image,
+        available: uploadPayload.available,
+      },
     });
   } catch (err) {
     const image = req.image;

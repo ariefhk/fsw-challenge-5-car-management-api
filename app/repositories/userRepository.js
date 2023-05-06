@@ -14,10 +14,6 @@ exports.find = (id) => {
   return User.findByPk(id);
 };
 
-exports.delete = (id) => {
-  return User.destroy(id);
-};
-
 exports.getAllUser = () => {
   return User.findAll();
 };
