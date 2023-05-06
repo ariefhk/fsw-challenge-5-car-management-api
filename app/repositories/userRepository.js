@@ -18,6 +18,6 @@ exports.delete = (id) => {
   return User.destroy(id);
 };
 
-exports.findAll = () => {
+exports.getAllUser = () => {
   return User.findAll();
 };

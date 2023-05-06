@@ -6,8 +6,15 @@ const { cloudinaryUpload } = require("../middlewares/cloudinaryMiddleware");
 const { imgUploader } = require("../middlewares/imgUploaderMiddleware");
 
 router.get("/", carController.getAllCar);
+router.get("/detail", authorize, isAdmin, carController.getDetailAllCar);
 router.get("/:id", checkCar, carController.getCar);
-router.get("/detail/:id", checkCar, carController.getDetailCar);
+router.get(
+  "/detail/:id",
+  authorize,
+  isAdmin,
+  checkCar,
+  carController.getDetailCar
+);
 router.post(
   "/",
   authorize,

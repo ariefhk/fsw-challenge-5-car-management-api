@@ -20,6 +20,36 @@ exports.whoAmI = async (req, res) => {
   }
 };
 
+exports.getAllUser = async (req, res) => {
+  try {
+    const userPayload = await userService.getAllUser();
+    res.status(200).json({
+      status: "OK",
+      message: "Success",
+      data: userPayload,
+    });
+  } catch (err) {
+    res.status(err.statusCode || 404).json({
+      status: "FAIL",
+      message: err.message,
+    });
+  }
+};
+exports.deleteUser = async (req, res) => {
+  try {
+    await userService.deleteUser();
+    res.status(200).json({
+      status: "OK",
+      message: "Success delete user!",
+    });
+  } catch (err) {
+    res.status(err.statusCode || 404).json({
+      status: "FAIL",
+      message: err.message,
+    });
+  }
+};
+
 exports.login = async (req, res) => {
   try {
     const email = req.body.email;

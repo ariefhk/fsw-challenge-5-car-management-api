@@ -12,12 +12,33 @@ exports.deleteCar = (carId) => {
   return Car.destroy({ where: { id: carId } });
 };
 
-exports.getCar = () => {
+exports.getAllCar = () => {
   return Car.findAll();
 };
 
 exports.getCarById = (carId) => {
   return Car.findOne({ where: { id: carId } });
+};
+
+exports.getDetailAllCar = () => {
+  return Car.findAll({
+    include: [
+      {
+        model: User,
+        as: "created",
+      },
+      {
+        model: User,
+        as: "updated",
+      },
+      {
+        model: User,
+        as: "deleted",
+      },
+    ],
+    attributes: { exclude: ["createdBy", "updatedBy", "deletedBy"] },
+    paranoid: false,
+  });
 };
 
 exports.getDetailCar = (carId) => {
@@ -37,5 +58,6 @@ exports.getDetailCar = (carId) => {
       },
     ],
     attributes: { exclude: ["createdBy", "updatedBy", "deletedBy"] },
+    paranoid: false,
   });
 };

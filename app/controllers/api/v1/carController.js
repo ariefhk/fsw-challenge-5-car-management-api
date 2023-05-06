@@ -43,6 +43,23 @@ exports.createCar = async (req, res) => {
 exports.getAllCar = async (req, res) => {
   try {
     const carPayload = await carService.getAllCar();
+
+    res.status(200).json({
+      status: "OK",
+      message: "Success",
+      data: carPayload,
+    });
+  } catch (err) {
+    res.status(err.statusCode).json({
+      status: "FAIL",
+      message: err.message,
+    });
+  }
+};
+exports.getDetailAllCar = async (req, res) => {
+  try {
+    const carPayload = await carService.getDetailAllCar();
+
     res.status(200).json({
       status: "OK",
       message: "Success",

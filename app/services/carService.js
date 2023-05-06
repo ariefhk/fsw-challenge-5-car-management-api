@@ -3,7 +3,7 @@ const ApplicationError = require("../errors/ApplicationError");
 
 exports.createCar = async (name, price, size, image, available, createdBy) => {
   try {
-    const car = {
+    const carPayload = {
       name,
       price,
       size: size.toLowerCase(),
@@ -11,7 +11,7 @@ exports.createCar = async (name, price, size, image, available, createdBy) => {
       available,
       createdBy,
     };
-    return await carRepository.createCar(car);
+    return await carRepository.createCar(carPayload);
   } catch (error) {
     throw new ApplicationError(500, "failed insert car!");
   }
@@ -19,7 +19,18 @@ exports.createCar = async (name, price, size, image, available, createdBy) => {
 
 exports.getCarById = async (id) => {
   try {
-    return await carRepository.getCarById(id);
+    const payload = await carRepository.getCarById(id);
+    const carPayload = {
+      id: payload?.id,
+      name: payload?.name,
+      price: payload?.price,
+      size: payload?.size,
+      image: payload?.image,
+      available: payload?.available,
+      createdAt: payload?.dataValues.createdAt,
+      updatedAt: payload?.dataValues.updatedAt,
+    };
+    return carPayload;
   } catch (error) {
     throw new ApplicationError(500, "failed get car!");
   }
@@ -27,7 +38,59 @@ exports.getCarById = async (id) => {
 
 exports.getAllCar = async () => {
   try {
-    return await carRepository.getCar();
+    const payload = await carRepository.getAllCar();
+    const carPayload =
+      (await payload.length) < 1
+        ? []
+        : payload.map((car) => {
+            return {
+              id: car?.dataValues?.id,
+              name: car?.dataValues?.name,
+              price: car?.dataValues?.price,
+              size: car?.dataValues?.size,
+              image: car?.dataValues?.image,
+              available: car?.dataValues?.available,
+              createdAt: car?.dataValues?.createdAt,
+              updatedAt: car?.dataValues?.updatedAt,
+            };
+          });
+
+    return carPayload;
+  } catch (error) {
+    throw new ApplicationError(500, "failed get car!");
+  }
+};
+exports.getDetailAllCar = async () => {
+  try {
+    const payload = await carRepository.getDetailAllCar();
+    const carPayload =
+      (await payload.length) < 1
+        ? []
+        : payload.map((car) => {
+            return {
+              id: car?.dataValues?.id,
+              name: car?.dataValues?.name,
+              price: car?.dataValues?.price,
+              size: car?.dataValues?.size,
+              image: car?.dataValues?.image,
+              available: car?.dataValues?.available,
+              createdBy: {
+                name: car?.created?.dataValues?.name,
+                email: car?.created?.dataValues?.email || null,
+              },
+              updatedBy: {
+                name: car?.updated?.dataValues?.name || null,
+                email: car?.updated?.dataValues?.email || null,
+              },
+              deletedBy: {
+                name: car?.deleted?.dataValues?.name || null,
+                email: car?.deleted?.dataValues?.email || null,
+              },
+              createdAt: car?.dataValues?.createdAt,
+              updatedAt: car?.dataValues?.updatedAt,
+            };
+          });
+    return carPayload;
   } catch (error) {
     throw new ApplicationError(500, "failed get car!");
   }
@@ -35,28 +98,30 @@ exports.getAllCar = async () => {
 
 exports.getDetailCar = async (carId) => {
   try {
-    const carPayload = await carRepository.getDetailCar(carId);
-    const payload = {
-      id: carPayload.id,
-      name: carPayload.name,
-      price: carPayload.price,
-      size: carPayload.size,
-      available: carPayload.available,
-      createdByUser: {
-        name: carPayload.created?.dataValues?.name,
-        email: carPayload.created?.dataValues?.email || null,
+    const payload = await carRepository.getDetailCar(carId);
+    const carPayload = {
+      id: payload?.id,
+      name: payload?.name,
+      price: payload?.price,
+      size: payload?.size,
+      image: payload?.image,
+      available: payload?.available,
+      createdBy: {
+        name: payload?.created?.dataValues?.name,
+        email: payload?.created?.dataValues?.email || null,
       },
-      updatedByUser: {
-        name: carPayload.updated?.dataValues?.name || null,
-        email: carPayload.updated?.dataValues?.email || null,
+      updatedBy: {
+        name: payload?.updated?.dataValues?.name || null,
+        email: payload?.updated?.dataValues?.email || null,
       },
-      deletedByUser: {
-        name: carPayload.deleted?.dataValues?.name || null,
-        email: carPayload.deleted?.dataValues?.email || null,
+      deletedBy: {
+        name: payload?.deleted?.dataValues?.name || null,
+        email: payload?.deleted?.dataValues?.email || null,
       },
+      createdAt: payload?.dataValues.createdAt,
+      updatedAt: payload?.dataValues.updatedAt,
     };
-    // return carPayload;
-    return payload;
+    return carPayload;
   } catch (error) {
     throw new ApplicationError(500, "failed get car!");
   }

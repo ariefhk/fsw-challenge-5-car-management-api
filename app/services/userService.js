@@ -110,6 +110,29 @@ exports.login = async (email, password) => {
   };
 };
 
+exports.getAllUser = async () => {
+  try {
+    const payload = await userRepository.getAllUser();
+    // Super Admin can't be searched
+    const userPayload =
+      (await payload.length) < 1
+        ? []
+        : payload.filter((user) => user.role !== ACCESS_CONTROL.SUPERADMIN);
+
+    return userPayload;
+  } catch (error) {
+    throw new ApplicationError(500, "failed get user!");
+  }
+};
+
+exports.deleteUser = async (id) => {
+  try {
+    return await userRepository.delete(id);
+  } catch (error) {
+    throw new ApplicationError(500, "failed delete user!");
+  }
+};
+
 exports.registerAdmin = async (name, email, password) => {
   if (!name) throw new ApplicationError(400, `name can't be empty!`);
   if (!email) throw new ApplicationError(400, `email can't be empty!`);
