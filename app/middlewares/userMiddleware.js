@@ -20,10 +20,10 @@ exports.authorize = async (req, res, next) => {
 
 exports.isAdmin = async (req, res, next) => {
   try {
-    const user = req.user;
+    const user = req.user || null;
     if (
-      ACCESS_CONTROL.SUPERADMIN === user.role ||
-      ACCESS_CONTROL.ADMIN === user.role
+      ACCESS_CONTROL.SUPERADMIN === user?.role ||
+      ACCESS_CONTROL.ADMIN === user?.role
     ) {
       return next();
     }
@@ -39,7 +39,7 @@ exports.isAdmin = async (req, res, next) => {
 exports.isSuperAdmin = async (req, res, next) => {
   try {
     const user = req.user;
-    if (ACCESS_CONTROL.SUPERADMIN !== user.role)
+    if (ACCESS_CONTROL.SUPERADMIN !== user?.role)
       throw new ApplicationError(403, "You don't have permission to access!");
 
     next();
