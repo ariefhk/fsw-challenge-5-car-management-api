@@ -133,15 +133,6 @@ exports.getAllUser = async () => {
   }
 };
 
-exports.deleteUser = async (id) => {
-  try {
-    return await userRepository.delete(id);
-  } catch (error) {
-    // throw new ApplicationError(500, "failed delete user!");
-    throw new ApplicationError(500, error.message);
-  }
-};
-
 exports.registerAdmin = async (name, email, password) => {
   if (!name) throw new ApplicationError(400, `name can't be empty!`);
   if (!email) throw new ApplicationError(400, `email can't be empty!`);
